@@ -19,7 +19,7 @@ class AppointmentController {
                 canceled_at: null,
             },
             order: ['date'],
-            attributes: ['id', 'date'],
+            attributes: ['id', 'date', 'past', 'cancelable'],
             limit: 20,
             offset: (page - 1) * 20,
             include: [
@@ -154,9 +154,7 @@ class AppointmentController {
             });
         }
 
-        const dateWithSub = subHours(appointment.date, 2);
-
-        if (isBefore(dateWithSub, new Date())) {
+        if (!appointment.cancelable) {
             return res.status(401).json({
                 error: 'You can only cancel appointment two hours in advance.',
             });
